@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "name": "Hollow Creek Pad 4 Expansion - Blueprint",
+  "properties": { "site_name": "Hollow Creek Pad 4 Expansion", "capture_type": "blueprint" },
+  "features": [
+    { "type": "Feature", "properties": { "id": "PAD-A", "name": "Building Pad A", "category": "Building Pad", "target_day": 20 },
+      "geometry": { "type": "Polygon", "coordinates": [[[20,20],[120,20],[120,80],[20,80],[20,20]]] } },
+    { "type": "Feature", "properties": { "id": "PAD-B", "name": "Building Pad B", "category": "Building Pad", "target_day": 25 },
+      "geometry": { "type": "Polygon", "coordinates": [[[140,20],[220,20],[220,70],[140,70],[140,20]]] } },
+    { "type": "Feature", "properties": { "id": "ROAD-1", "name": "Primary Access Road", "category": "Access Road", "target_day": 30 },
+      "geometry": { "type": "Polygon", "coordinates": [[[0,90],[260,90],[260,110],[0,110],[0,90]]] } },
+    { "type": "Feature", "properties": { "id": "STOCK-1", "name": "Aggregate Stockpile Pad", "category": "Stockpile Area", "target_day": 15 },
+      "geometry": { "type": "Polygon", "coordinates": [[[20,130],[100,130],[100,190],[20,190],[20,130]]] } },
+    { "type": "Feature", "properties": { "id": "POND-1", "name": "Retention Pond", "category": "Retention Pond", "target_day": 20 },
+      "geometry": { "type": "Polygon", "coordinates": [[[140,130],[200,130],[200,180],[140,180],[140,130]]] } },
+    { "type": "Feature", "properties": { "id": "YARD-1", "name": "Laydown Yard", "category": "Laydown Yard", "target_day": 10 },
+      "geometry": { "type": "Polygon", "coordinates": [[[20,210],[220,210],[220,250],[20,250],[20,210]]] } }
+  ]
+}

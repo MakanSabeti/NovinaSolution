@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "name": "Hollow Creek - Day 25 Capture",
+  "properties": { "site_name": "Hollow Creek Pad 4 Expansion", "capture_date": "2026-07-25", "day_of_project": 25 },
+  "features": [
+    { "type": "Feature", "properties": { "id": "PAD-A", "name": "Building Pad A", "category": "Building Pad" },
+      "geometry": { "type": "Polygon", "coordinates": [[[20,20],[120,20],[120,80],[20,80],[20,20]]] } },
+    { "type": "Feature", "properties": { "id": "PAD-B", "name": "Building Pad B", "category": "Building Pad" },
+      "geometry": { "type": "Polygon", "coordinates": [[[140,20],[220,20],[220,70],[140,70],[140,20]]] } },
+    { "type": "Feature", "properties": { "id": "ROAD-1", "name": "Primary Access Road", "category": "Access Road" },
+      "geometry": { "type": "Polygon", "coordinates": [[[0,90],[234,90],[234,110],[0,110],[0,90]]] } },
+    { "type": "Feature", "properties": { "id": "POND-1", "name": "Retention Pond", "category": "Retention Pond" },
+      "geometry": { "type": "Polygon", "coordinates": [[[140,130],[200,130],[200,180],[140,180],[140,130]]] } },
+    { "type": "Feature", "properties": { "id": "YARD-1", "name": "Laydown Yard", "category": "Laydown Yard" },
+      "geometry": { "type": "Polygon", "coordinates": [[[20,210],[220,210],[220,250],[20,250],[20,210]]] } }
+  ]
+}

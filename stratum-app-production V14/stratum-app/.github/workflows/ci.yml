@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: stratum_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/stratum_test
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Lint (real bugs only)
+        run: ruff check .
+      - name: Unit + auth/tenant-isolation tests
+        run: pytest -q
+      - name: Postgres storage smoke test
+        run: DATABASE_URL="$TEST_DATABASE_URL" python tests/smoke_test_postgres.py
+      - name: App boots under gunicorn
+        run: |
+          DATABASE_URL="$TEST_DATABASE_URL" SUPABASE_URL=https://ci.supabase.co SUPABASE_ANON_KEY=ci PORT=8000 \
+            gunicorn -c gunicorn.conf.py app:app --daemon --pid /tmp/gunicorn.pid
+          for i in $(seq 1 20); do curl -fsS localhost:8000/api/health && break; sleep 1; done
+          curl -fsS localhost:8000/ | grep "<html" > /dev/null
+          test "$(curl -s -o /dev/null -w '%{http_code}' localhost:8000/api/sites)" = "401"
+          kill "$(cat /tmp/gunicorn.pid)"
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Syntax-check the page's inline scripts
+        run: |
+          node -e '
+            const html = require("fs").readFileSync("frontend/site_progress_mvp.html", "utf8");
+            const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+            if (!scripts.length) throw new Error("no inline scripts found");
+            scripts.forEach((src, i) => { new Function(src); console.log(`script ${i + 1}: ok`); });
+          '

@@ -1,0 +1,42 @@
+# Render Blueprint -- https://render.com/docs/blueprint-spec
+# Dashboard -> New -> Blueprint -> pick this repo. Render creates the service and
+# prompts once for every `sync: false` value (secrets are never stored in git).
+services:
+  - type: web
+    name: stratum
+    runtime: python
+    plan: starter            # ~$7/mo, always on. "free" works for a demo but sleeps after 15 min idle.
+    region: oregon           # same region as the Supabase project (aws us-west-2) -> low DB latency
+    branch: main
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn --chdir backend -c gunicorn.conf.py app:app
+    healthCheckPath: /api/health
+    # Only deploy commits whose GitHub Actions checks passed (.github/workflows/ci.yml).
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL          # Supabase -> Connect -> Transaction pooler (port 6543)
+        sync: false
+      - key: SUPABASE_URL          # https://<project-ref>.supabase.co
+        sync: false
+      - key: SUPABASE_ANON_KEY     # public anon / publishable key (safe for the browser)
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY   # secret; server-side only (file storage)
+        sync: false
+      - key: SUPABASE_JWT_SECRET   # optional: only for projects still on the legacy HS256 JWT secret
+        sync: false
+      - key: BOOTSTRAP_ADMIN_EMAIL # your email -> you inherit the pre-auth 'Default Organization' data
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: ALERT_FROM_EMAIL      # e.g. "Stratum Alerts <alerts@yourdomain.com>" (domain verified in Resend)
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: SLACK_WEBHOOK_URL     # optional operator-wide fallback channel
+        sync: false

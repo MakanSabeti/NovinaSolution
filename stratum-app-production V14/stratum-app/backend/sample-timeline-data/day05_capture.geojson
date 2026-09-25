@@ -1,0 +1,9 @@
+{
+  "type": "FeatureCollection",
+  "name": "Hollow Creek - Day 5 Capture",
+  "properties": { "site_name": "Hollow Creek Pad 4 Expansion", "capture_date": "2026-07-05", "day_of_project": 5 },
+  "features": [
+    { "type": "Feature", "properties": { "id": "PAD-A", "name": "Building Pad A", "category": "Building Pad" },
+      "geometry": { "type": "Polygon", "coordinates": [[[20,20],[40,20],[40,80],[20,80],[20,20]]] } }
+  ]
+}
